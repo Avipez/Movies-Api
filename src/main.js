@@ -13,8 +13,9 @@ async function getTrendingMoviesPreview() {
     const movies = data.results;
     console.log({data, movies});
 
+    trendingMoviesPreviewList.innerHTML = "";
+
     movies.forEach( movie => {
-        const trendingPreviewMoviesContainer = document.querySelector("#trendingPreview .trendingPreview-movieList")
 
         const movieSlide = document.createElement("div");
         movieSlide.classList.add("movie-container");
@@ -25,7 +26,7 @@ async function getTrendingMoviesPreview() {
         movieImg.setAttribute("src", `https://image.tmdb.org/t/p/w300/${movie.poster_path}`);
 
         movieSlide.appendChild(movieImg);
-        trendingPreviewMoviesContainer.appendChild(movieSlide);
+        trendingMoviesPreviewList.appendChild(movieSlide);
 
     });
 };
@@ -35,10 +36,12 @@ async function getMovieCategories() {
     const { data } = await api('genre/movie/list');
     const categories = data.genres;
 
+
+    categoriesPreviewList.innerHTML = "";
     console.log({data, categories});
 
     categories.forEach( category => {
-        const categoryPreviewContainer = document.querySelector("#categoriesPreview .categoriesPreview-list")
+        const categoriesPreviewList = document.querySelector("#categoriesPreview .categoriesPreview-list")
 
         const categoryContainer = document.createElement("div");
         categoryContainer.classList.add("category-container");
@@ -46,14 +49,14 @@ async function getMovieCategories() {
         const categoryTitle = document.createElement("h3");
         categoryTitle.classList.add("category-title");
         categoryTitle.setAttribute("id", "id" + category.id);
+        categoryTitle.addEventListener("click", () => {
+          location.hash = "#category=" + category.id;
+        })
         const categoryTitleText = document.createTextNode(category.name);
 
         categoryTitle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTitle);
-        categoryPreviewContainer.appendChild(categoryContainer);
+        categoriesPreviewList.appendChild(categoryContainer);
     });
 
-}
-
-getTrendingMoviesPreview();
-getMovieCategories();
+};
