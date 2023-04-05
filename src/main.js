@@ -11,24 +11,7 @@ const api = axios.create({
 async function getTrendingMoviesPreview() {
     const { data } = await api('trending/movie/day');
     const movies = data.results;
-    console.log({data, movies});
-
-    trendingMoviesPreviewList.innerHTML = "";
-
-    movies.forEach( movie => {
-
-        const movieSlide = document.createElement("div");
-        movieSlide.classList.add("movie-container");
-
-        const movieImg = document.createElement("img");
-        movieImg.classList.add("movie-img");
-        movieImg.setAttribute("alt", movie.title);
-        movieImg.setAttribute("src", `https://image.tmdb.org/t/p/w300/${movie.poster_path}`);
-
-        movieSlide.appendChild(movieImg);
-        trendingMoviesPreviewList.appendChild(movieSlide);
-
-    });
+    fillMovieInfo(movies, trendingMoviesPreviewList);
 };
 
 
@@ -50,7 +33,7 @@ async function getMovieCategories() {
         categoryTitle.classList.add("category-title");
         categoryTitle.setAttribute("id", "id" + category.id);
         categoryTitle.addEventListener("click", () => {
-          location.hash = "#category=" + category.id;
+          location.hash = `#category=${category.id}-${category.name}`
         })
         const categoryTitleText = document.createTextNode(category.name);
 
@@ -60,3 +43,35 @@ async function getMovieCategories() {
     });
 
 };
+
+async function getMoviesByCategory(id) {
+  const { data } = await api('discover/movie', {
+    params: {
+      with_genres: id,
+    }
+  });
+  const movies = data.results;
+  /* genericSection.innerHTML = ""; */
+  trendingPreviewSection.scrollTop;
+
+  fillMovieInfo(movies, genericSection)
+  
+};
+
+function fillMovieInfo(movies, node ) {
+  node.innerHTML = "";
+  movies.forEach( movie => {
+  
+    const movieSlide = document.createElement("div");
+    movieSlide.classList.add("movie-container");
+  
+    const movieImg = document.createElement("img");
+    movieImg.classList.add("movie-img");
+    movieImg.setAttribute("alt", movie.title);
+    movieImg.setAttribute("src", `https://image.tmdb.org/t/p/w300/${movie.poster_path}`);
+  
+    movieSlide.appendChild(movieImg);
+    node.appendChild(movieSlide);
+
+  });
+}
