@@ -51,7 +51,6 @@ async function getMoviesByCategory(id) {
     }
   });
   const movies = data.results;
-  /* genericSection.innerHTML = ""; */
   trendingPreviewSection.scrollTop;
 
   fillMovieInfo(movies, genericSection)
@@ -75,3 +74,22 @@ function fillMovieInfo(movies, node ) {
 
   });
 }
+
+async function getMoviesBySearch(query) {
+  const { data } = await api('search/movie', {
+    params: {
+      query,
+    }
+  });
+  const movies = data.results;
+  trendingPreviewSection.scrollTop;
+
+  fillMovieInfo(movies, genericSection)
+  
+};
+
+async function getTrendingMovies() {
+  const { data } = await api('trending/movie/day');
+  const movies = data.results;
+  fillMovieInfo(movies, genericSection);
+};
